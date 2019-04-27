@@ -7,7 +7,7 @@ import core.*;
 
 public class Simulation1 {
 	public static void start(int seed_num, int sim_count, String f_clock){
-		int sim_max = 1;
+		int sim_max = 100000;
 		Sfmt rnd = new Sfmt(seed_num);
 		int action1 = 8, action2 = 8;
 		int hit1, hit2;
