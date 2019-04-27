@@ -1,13 +1,13 @@
 package agent;
 
 import core.Sfmt;
-import environment.Field1;
+import environment.Field2;
 
-public class ActionB {
-	Field1 field;
+public class ActionB2 {
+	Field2 field;
 	Sfmt rnd;
 	
-	public ActionB(Field1 f, int p[]){
+	public ActionB2(Field2 f, int p[]){
 		field = f;
 		rnd = new Sfmt(11);
 	}

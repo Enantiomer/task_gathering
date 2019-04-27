@@ -5,20 +5,20 @@ import agent.*;
 import core.*;
 
 
-public class Simulation1 {
+public class Simulation2 {
 	public static void start(int seed_num, int sim_count, String f_clock){
-		int sim_max = 1;
+		int sim_max = 10;
 		Sfmt rnd = new Sfmt(seed_num);
 		int action1 = 8, action2 = 8;
 		int hit1, hit2;
 		int score1, score2;
 
-		Field1 f1 = new Field1(rnd);
+		Field2 f1 = new Field2(rnd);
 
 		int pos1[] = {0, 0};
 		int pos2[] = {4, 4};
-		AgentA player1 = new AgentA(f1, pos1);
-		AgentB player2 = new AgentB(f1, pos2);
+		AgentA2 player1 = new AgentA2(f1, pos1);
+		AgentB2 player2 = new AgentB2(f1, pos2);
 		score1 = 0;
 		score2 = 0;
 		
@@ -36,6 +36,7 @@ public class Simulation1 {
 			action2 = 8;
 			if(player1.canAct(time, rnd)) action1 = player1.action(player2.getPos());
 			if(player2.canAct(time, rnd)) action2 = player2.action(player1.getPos());
+			if(time%10 == 0)System.out.println("action player1: " + action1 + ", player2: " + action2);
 
 			if(action1 < 4) player1.move(action1);
 			if(action2 < 4) player2.move(action2);
@@ -52,7 +53,7 @@ public class Simulation1 {
 			pos2 = player2.getPos();
 
 			//同じマスにいる場合はどちらも報酬は獲得できず報酬が消滅する
-			if(pos1[0] == pos2[0] && pos1[1] == pos2[1] && pos1[0] != -1){
+			if((pos1[0] == pos2[0]) && (pos1[1] == pos2[1]) && (pos1[0] != -1)){
 				f1.acquire_event(pos1[0], pos1[1]);
 			}else{
 				if(player1.getStatus() != "broken"){
@@ -73,12 +74,23 @@ public class Simulation1 {
 				System.out.println();
 			}
 */
+			for(int i=0;i<5;i++){
+				for(int j=0;j<5;j++){
+					System.out.print("{");
+					for(int k=0;k<4;k++){
+						System.out.print(f1.getPosStatus(j, i, k) + ", ");						
+					}
+					System.out.print("}, ");
+				}
+				System.out.println();
+			}
+
 			//それぞれのエージェントがこのターンにとった行動を出力
-			System.out.println("action player1: " + action1 + ", player2: " + action2);
+			if(time%10 == 0)System.out.println("action player1: " + action1 + ", player2: " + action2);
 			//それぞれのエージェントのこのターンの座標を出力
-			System.out.println("position player1: (" + player1.getPos()[0] + "," + player1.getPos()[1] + "), player2: (" + player2.getPos()[0] + "," + player2.getPos()[1] + ")");
+			if(time%10 == 0)System.out.println("position player1: (" + player1.getPos()[0] + "," + player1.getPos()[1] + "), player2: (" + player2.getPos()[0] + "," + player2.getPos()[1] + ")");
 			//それぞれのエージェントがこれまでに獲得している総スコアを出力
-			System.out.println("score player1: " + score1 + ", player2: " + score2);
+			if(time%10 == 0)System.out.println("score player1: " + score1 + ", player2: " + score2);
 			System.out.println();
 		}
 		for(int i=0;i<5;i++){
