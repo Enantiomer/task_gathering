@@ -7,7 +7,7 @@ import core.*;
 
 public class Simulation2 {
 	public static void start(int seed_num, int sim_count, String f_clock){
-		int sim_max = 10;
+		int sim_max = 100000;
 		Sfmt rnd = new Sfmt(seed_num);
 		int action1 = 8, action2 = 8;
 		int hit1, hit2;
@@ -74,16 +74,6 @@ public class Simulation2 {
 				System.out.println();
 			}
 */
-			for(int i=0;i<5;i++){
-				for(int j=0;j<5;j++){
-					System.out.print("{");
-					for(int k=0;k<4;k++){
-						System.out.print(f1.getPosStatus(j, i, k) + ", ");						
-					}
-					System.out.print("}, ");
-				}
-				System.out.println();
-			}
 
 			//それぞれのエージェントがこのターンにとった行動を出力
 			if(time%10 == 0)System.out.println("action player1: " + action1 + ", player2: " + action2);
@@ -96,6 +86,18 @@ public class Simulation2 {
 		for(int i=0;i<5;i++){
 			for(int j=0;j<5;j++){
 				System.out.print(f1.getP(j, i) + ", ");
+			}
+			System.out.println();
+		}
+
+		//マップを表示
+		for(int i=0;i<5;i++){
+			for(int j=0;j<5;j++){
+				System.out.print("{");
+				for(int k=0;k<4;k++){
+					System.out.print(f1.getPosStatus(j, i, k) + ", ");						
+				}
+				System.out.print("}, ");
 			}
 			System.out.println();
 		}
