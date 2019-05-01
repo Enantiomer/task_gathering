@@ -5,6 +5,7 @@ import core.*;
 
 //他に使いたいライブラリがあればここに書く. 例 java.util.*;
 import static java.lang.Math.abs;
+import java.util.Arrays;
 
 
 public class ActionA {
@@ -13,7 +14,7 @@ public class ActionA {
 
 	//フィールドはここに書く
 	private static final int REWARD_THRESHOLD = 5; // 報酬数の閾値
-	private static final int STEP_THRESHOLD = 40000; // ステップ数の閾値
+	private static final int STEP_THRESHOLD = 60000; // ステップ数の閾値
 	private static int score1 = 0; // スコア
 	private static int score2 = 0;
 	private static int numOfsteps = 0; // ステップ数
@@ -33,32 +34,24 @@ public class ActionA {
 		calcScore(pos, e_pos);
 		// ステップ数
 		numOfsteps++;
-		System.out.println("score1: " + score1 + ", score2: " + score2);
+//		System.out.println("score1: " + score1 + ", score2: " + score2);
 //		System.out.println("numofSteps: " + numOfsteps);
 		if (numOfsteps > STEP_THRESHOLD) {
 			// 試合がSTEP_THRESHOLDステップ進んだとき、自分より相手がより多くの報酬を得ていた場合には攻撃を優先する。
 			if (score1 > score2 && isAttackable(pos, e_pos) && rnd.NextUnif() < 0.8) {
 				return 4 + (int)(rnd.NextUnif()*4);
 			}
-			return (int)(rnd.NextUnif()*4);
+			return determineMoveDirection(pos);
 		}
-		if (field.getRewardCount() > REWARD_THRESHOLD) {
-			if (rnd.NextUnif() < 0.6) {
-				// とりあえず移動する
-				// TODO: 報酬の位置を取得してそっちに移動するのが丸い
-
-				return (int)(rnd.NextUnif()*4);
-			}
-			// とりあえず攻撃する
+		if (field.getRewardCount() > REWARD_THRESHOLD) { // 報酬の数が閾値より多かったら
+			// 移動を優先
+			if (rnd.NextUnif() < 0.6) return determineMoveDirection(pos);
 			if (isAttackable(pos, e_pos)) return 4 + (int)(rnd.NextUnif()*4);
 			return (int)(rnd.NextUnif()*4);
 		} else {
-			if (rnd.NextUnif() < 0.6 && isAttackable(pos, e_pos)) {
-				// とりあえず攻撃する
-				return 4 + (int)(rnd.NextUnif() * 4);
-			}
-			// とりあえず移動する
-			return (int)(rnd.NextUnif() * 4);
+			// 攻撃を優先
+			if (rnd.NextUnif() < 0.6 && isAttackable(pos, e_pos)) return 4 + (int)(rnd.NextUnif() * 4);
+			return determineMoveDirection(pos);
 		}
 		
 		//返り値別の行動一覧: 0(上移動), 1(右移動), 2(下移動), 3(左移動), 4(上攻撃), 5(右攻撃), 6(下攻撃), 7(左攻撃), それ以外(何もしない)
@@ -74,5 +67,53 @@ public class ActionA {
 		if (pos[0] == -1 || pos[1] == -1 || e_pos[0] == -1 || e_pos[1] == -1) return;
 		score1 += field.getEvent(pos[0], pos[1]);
 		score2 += field.getEvent(e_pos[0], e_pos[1]);
+	}
+
+	private int determineMoveDirection(int pos[]) {
+		for (int y = pos[1] - 1; y <= pos[1] + 1; y++) {
+			for (int x = pos[0] - 1; x <= pos[0] + 1; x++) {
+				if (x > -1 && x < 5 && y > -1 && y < 5 && field.getEvent(x, y) == 1) {
+					if (x == pos[0] && y == pos[1] + 1 && field.getPosStatus(pos[0], pos[1], 0) == 1) return 0; //上
+					if (x == pos[0] + 1 && y == pos[1] && field.getPosStatus(pos[0], pos[1], 1) == 1) return 1; //右
+					if (x == pos[0] && y == pos[1] - 1 && field.getPosStatus(pos[0], pos[1], 2) == 1) return 2; //下
+					if (x == pos[0] - 1 && y == pos[1] && field.getPosStatus(pos[0], pos[1], 3) == 1) return 3; //左
+				}
+			}
+		}
+		return randomDirection(pos);
+	}
+
+	private int randomDirection(int pos[]) {
+		if (Arrays.equals(field.getPosStatus(pos[0], pos[1]), new int[]{0,1,1,0})) {
+			// 上と左に行けない
+			int[] movableDirections = {1,2};
+			return movableDirections[(int)(rnd.NextUnif() * 2)];
+		} else if (Arrays.equals(field.getPosStatus(pos[0], pos[1]), new int[]{0,0,1,1})) {
+			// 上と右に行けない
+			int[] movableDirections = {2,3};
+			return movableDirections[(int)(rnd.NextUnif() * 2)];
+		} else if (Arrays.equals(field.getPosStatus(pos[0], pos[1]), new int[]{1,0,0,1})) {
+			// 右と下に行けない
+			int[] movableDirections = {0,3};
+			return movableDirections[(int)(rnd.NextUnif() * 2)];
+		} else if (Arrays.equals(field.getPosStatus(pos[0], pos[1]), new int[]{1,1,0,0})) {
+			// 下と左に行けない
+			int[] movableDirections = {0,1};
+			return movableDirections[(int)(rnd.NextUnif() * 2)];
+		} else if (Arrays.equals(field.getPosStatus(pos[0], pos[1]), new int[]{1,1,1,0})) {
+			int[] movableDirections = {0,1,2};
+			return movableDirections[(int)(rnd.NextUnif() * 3)];
+		} else if (Arrays.equals(field.getPosStatus(pos[0], pos[1]), new int[]{1,1,0,1})) {
+			int[] movableDirections = {0,1,3};
+			return movableDirections[(int)(rnd.NextUnif() * 3)];
+		} else if (Arrays.equals(field.getPosStatus(pos[0], pos[1]), new int[]{1,0,1,1})) {
+			int[] movableDirections = {0,2,3};
+			return movableDirections[(int)(rnd.NextUnif() * 3)];
+		} else if (Arrays.equals(field.getPosStatus(pos[0], pos[1]), new int[]{0,1,1,1})) {
+			int[] movableDirections = {1,2,3};
+			return movableDirections[(int)(rnd.NextUnif() * 3)];
+		} else {
+			return (int)(rnd.NextUnif() * 4);
+		}
 	}
 }
