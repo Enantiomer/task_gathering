@@ -13,7 +13,7 @@ public class ActionA {
 	Sfmt rnd;
 
 	//フィールドはここに書く
-	private static final int REWARD_THRESHOLD = 5; // 報酬数の閾値
+	private static final int REWARD_THRESHOLD = 7; // 報酬数の閾値
 	private static final int STEP_THRESHOLD = 60000; // ステップ数の閾値
 	private static int score1 = 0; // スコア
 	private static int score2 = 0;
