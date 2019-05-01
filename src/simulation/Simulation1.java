@@ -87,6 +87,5 @@ public class Simulation1 {
 			}
 			System.out.println();
 		}
-
 	}
 }
