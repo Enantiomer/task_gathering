@@ -14,7 +14,7 @@ public class ActionA {
 
 	//フィールドはここに書く
 	private static final int REWARD_THRESHOLD = 7; // 報酬数の閾値
-	private static final int STEP_THRESHOLD = 60000; // ステップ数の閾値
+	private static final int STEP_THRESHOLD = 65000; // ステップ数の閾値
 	private static int score1 = 0; // スコア
 	private static int score2 = 0;
 	private static int numOfsteps = 0; // ステップ数
@@ -38,19 +38,19 @@ public class ActionA {
 //		System.out.println("numofSteps: " + numOfsteps);
 		if (numOfsteps > STEP_THRESHOLD) {
 			// 試合がSTEP_THRESHOLDステップ進んだとき、自分より相手がより多くの報酬を得ていた場合には攻撃を優先する。
-			if (score1 > score2 && isAttackable(pos, e_pos) && rnd.NextUnif() < 0.8) {
-				return 4 + (int)(rnd.NextUnif()*4);
+			if (score1 > score2 && isAttackable(pos, e_pos) && rnd.NextUnif() < 0.75) {
+				return determineAttackDirection(pos, e_pos);
 			}
 			return determineMoveDirection(pos);
 		}
 		if (field.getRewardCount() > REWARD_THRESHOLD) { // 報酬の数が閾値より多かったら
 			// 移動を優先
 			if (rnd.NextUnif() < 0.6) return determineMoveDirection(pos);
-			if (isAttackable(pos, e_pos)) return 4 + (int)(rnd.NextUnif()*4);
+			if (isAttackable(pos, e_pos)) return determineAttackDirection(pos, e_pos);
 			return (int)(rnd.NextUnif()*4);
 		} else {
 			// 攻撃を優先
-			if (rnd.NextUnif() < 0.6 && isAttackable(pos, e_pos)) return 4 + (int)(rnd.NextUnif() * 4);
+			if (rnd.NextUnif() < 0.6 && isAttackable(pos, e_pos)) return determineAttackDirection(pos, e_pos);
 			return determineMoveDirection(pos);
 		}
 		
@@ -115,5 +115,42 @@ public class ActionA {
 		} else {
 			return (int)(rnd.NextUnif() * 4);
 		}
+	}
+
+	private int determineAttackDirection(int pos[], int e_pos[]) {
+		// 相手が右側
+		if (e_pos[0] == pos[0] + 1) {
+			if (e_pos[1] > pos[1] + 1) return 4; // 上攻撃
+			if (e_pos[1] == pos[1] + 1) {
+				int[] attackDirections = {4, 5};
+				return attackDirections[(int)(rnd.NextUnif() * 2)]; //右か上に攻撃
+			}
+			if (e_pos[1] == pos[1]) return 5; // 右攻撃
+			if (e_pos[1] == pos[1] - 1) {
+				int[] attackDirections = {5, 6};
+				return attackDirections[(int)(rnd.NextUnif() * 2)]; // 右か下に攻撃
+			}
+			return 6; //下攻撃
+		}
+		// 相手が左側
+		if (e_pos[0] == pos[0] - 1) {
+			if (e_pos[1] > pos[1] + 1) return 4; // 上攻撃
+			if (e_pos[1] == pos[1] + 1) {
+				int[] attackDirections = {4, 7};
+				return attackDirections[(int)(rnd.NextUnif() * 2)]; // 左か上に攻撃
+			}
+			if (e_pos[1] == pos[1]) return 7; // 左攻撃
+			if (e_pos[1] == pos[1] - 1) {
+				int[] attackDirections = {6, 7};
+				return attackDirections[(int)(rnd.NextUnif() * 2)]; // 左か下に攻撃
+			}
+			return 6; // 下攻撃
+		}
+		// 相手が真上か真下
+		if (e_pos[1] > pos[1]) return 4;
+		if (e_pos[1] == pos[1]) {
+			return 4 + (int)(rnd.NextUnif()*4);
+		}
+		return 6;
 	}
 }
