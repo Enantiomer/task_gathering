@@ -75,8 +75,16 @@ public class ActionA {
 				if (x > -1 && x < 5 && y > -1 && y < 5 && field.getEvent(x, y) == 1) {
 					if (x == pos[0] && y == pos[1] + 1 && field.getPosStatus(pos[0], pos[1], 0) == 1) return 0; //ã
 					if (x == pos[0] + 1 && y == pos[1] && field.getPosStatus(pos[0], pos[1], 1) == 1) return 1; //‰E
+					if (x == pos[0] + 1 && y == pos[1] + 1 && field.getPosStatus(pos[0], pos[1], 0) == 1 && field.getPosStatus(pos[0], pos[1], 1) == 1) {
+						int [] moveDirections = {0,1};
+						return moveDirections[(int)(rnd.NextUnif() * 2)];
+					}
 					if (x == pos[0] && y == pos[1] - 1 && field.getPosStatus(pos[0], pos[1], 2) == 1) return 2; //‰º
 					if (x == pos[0] - 1 && y == pos[1] && field.getPosStatus(pos[0], pos[1], 3) == 1) return 3; //¶
+					if (x == pos[0] - 1 && y == pos[1] - 1 && field.getPosStatus(pos[0], pos[1], 2) == 1 && field.getPosStatus(pos[0], pos[1], 3) == 1) {
+						int [] moveDirections = {2,3};
+						return moveDirections[(int)(rnd.NextUnif() * 2)];
+					}
 				}
 			}
 		}
