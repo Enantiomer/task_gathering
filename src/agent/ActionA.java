@@ -14,7 +14,7 @@ public class ActionA {
 
 	//フィールドはここに書く
 	private static final int REWARD_THRESHOLD = 7; // 報酬数の閾値
-	private static final int STEP_THRESHOLD = 60000; // ステップ数の閾値
+	private static final int STEP_THRESHOLD = 65000; // ステップ数の閾値
 	private static int score1 = 0; // スコア
 	private static int score2 = 0;
 	private static int numOfsteps = 0; // ステップ数
@@ -38,7 +38,7 @@ public class ActionA {
 //		System.out.println("numofSteps: " + numOfsteps);
 		if (numOfsteps > STEP_THRESHOLD) {
 			// 試合がSTEP_THRESHOLDステップ進んだとき、自分より相手がより多くの報酬を得ていた場合には攻撃を優先する。
-			if (score1 > score2 && isAttackable(pos, e_pos) && rnd.NextUnif() < 0.8) {
+			if (score1 > score2 && isAttackable(pos, e_pos) && rnd.NextUnif() < 0.75) {
 				return determineAttackDirection(pos, e_pos);
 			}
 			return determineMoveDirection(pos);
