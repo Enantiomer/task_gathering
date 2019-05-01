@@ -39,18 +39,18 @@ public class ActionA {
 		if (numOfsteps > STEP_THRESHOLD) {
 			// ‡‚ªSTEP_THRESHOLDƒXƒeƒbƒvi‚ñ‚¾‚Æ‚«A©•ª‚æ‚è‘Šè‚ª‚æ‚è‘½‚­‚Ì•ñV‚ğ“¾‚Ä‚¢‚½ê‡‚É‚ÍUŒ‚‚ğ—Dæ‚·‚éB
 			if (score1 > score2 && isAttackable(pos, e_pos) && rnd.NextUnif() < 0.8) {
-				return 4 + (int)(rnd.NextUnif()*4);
+				return determineAttackDirection(pos, e_pos);
 			}
 			return determineMoveDirection(pos);
 		}
 		if (field.getRewardCount() > REWARD_THRESHOLD) { // •ñV‚Ì”‚ªè‡’l‚æ‚è‘½‚©‚Á‚½‚ç
 			// ˆÚ“®‚ğ—Dæ
 			if (rnd.NextUnif() < 0.6) return determineMoveDirection(pos);
-			if (isAttackable(pos, e_pos)) return 4 + (int)(rnd.NextUnif()*4);
+			if (isAttackable(pos, e_pos)) return determineAttackDirection(pos, e_pos);
 			return (int)(rnd.NextUnif()*4);
 		} else {
 			// UŒ‚‚ğ—Dæ
-			if (rnd.NextUnif() < 0.6 && isAttackable(pos, e_pos)) return 4 + (int)(rnd.NextUnif() * 4);
+			if (rnd.NextUnif() < 0.6 && isAttackable(pos, e_pos)) return determineAttackDirection(pos, e_pos);
 			return determineMoveDirection(pos);
 		}
 		
@@ -115,5 +115,42 @@ public class ActionA {
 		} else {
 			return (int)(rnd.NextUnif() * 4);
 		}
+	}
+
+	private int determineAttackDirection(int pos[], int e_pos[]) {
+		// ‘Šè‚ª‰E‘¤
+		if (e_pos[0] == pos[0] + 1) {
+			if (e_pos[1] > pos[1] + 1) return 4; // ãUŒ‚
+			if (e_pos[1] == pos[1] + 1) {
+				int[] attackDirections = {4, 5};
+				return attackDirections[(int)(rnd.NextUnif() * 2)]; //‰E‚©ã‚ÉUŒ‚
+			}
+			if (e_pos[1] == pos[1]) return 5; // ‰EUŒ‚
+			if (e_pos[1] == pos[1] - 1) {
+				int[] attackDirections = {5, 6};
+				return attackDirections[(int)(rnd.NextUnif() * 2)]; // ‰E‚©‰º‚ÉUŒ‚
+			}
+			return 6; //‰ºUŒ‚
+		}
+		// ‘Šè‚ª¶‘¤
+		if (e_pos[0] == pos[0] - 1) {
+			if (e_pos[1] > pos[1] + 1) return 4; // ãUŒ‚
+			if (e_pos[1] == pos[1] + 1) {
+				int[] attackDirections = {4, 7};
+				return attackDirections[(int)(rnd.NextUnif() * 2)]; // ¶‚©ã‚ÉUŒ‚
+			}
+			if (e_pos[1] == pos[1]) return 7; // ¶UŒ‚
+			if (e_pos[1] == pos[1] - 1) {
+				int[] attackDirections = {6, 7};
+				return attackDirections[(int)(rnd.NextUnif() * 2)]; // ¶‚©‰º‚ÉUŒ‚
+			}
+			return 6; // ‰ºUŒ‚
+		}
+		// ‘Šè‚ª^ã‚©^‰º
+		if (e_pos[1] > pos[1]) return 4;
+		if (e_pos[1] == pos[1]) {
+			return 4 + (int)(rnd.NextUnif()*4);
+		}
+		return 6;
 	}
 }
