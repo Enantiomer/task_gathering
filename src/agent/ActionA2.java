@@ -127,7 +127,7 @@ public class ActionA2 {
 
 	private int determineAttackDirection(int pos[], int e_pos[]) {
 		// ‘Šè‚ª‰E‘¤
-		if (e_pos[0] == pos[0] + 1) {
+		if (e_pos[0] >= pos[0] + 1) {
 			if (e_pos[1] > pos[1] + 1) return 4; // ãUŒ‚
 			if (e_pos[1] == pos[1] + 1) {
 				int[] attackDirections = {4, 5};
@@ -141,7 +141,7 @@ public class ActionA2 {
 			return 6; //‰ºUŒ‚
 		}
 		// ‘Šè‚ª¶‘¤
-		if (e_pos[0] == pos[0] - 1) {
+		if (e_pos[0] <= pos[0] - 1) {
 			if (e_pos[1] > pos[1] + 1) return 4; // ãUŒ‚
 			if (e_pos[1] == pos[1] + 1) {
 				int[] attackDirections = {4, 7};
