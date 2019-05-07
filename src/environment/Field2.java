@@ -137,4 +137,8 @@ public class Field2 {
 	public double getP(int x, int y){
 		return p[x][y];
 	}
+
+	public int getRewardCount() {
+		return Arrays.stream(event).flatMapToInt(x -> Arrays.stream(x)).sum();
+	}
 }
