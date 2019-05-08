@@ -6,6 +6,8 @@ import core.*;
 //他に使いたいライブラリがあればここに書く. 例 java.util.*;
 import static java.lang.Math.abs;
 import java.util.Arrays;
+import java.util.List;
+import java.util.ArrayList;
 
 
 public class ActionA2 {
@@ -92,37 +94,9 @@ public class ActionA2 {
 	}
 
 	private int randomDirection(int pos[]) {
-		if (Arrays.equals(field.getPosStatus(pos[0], pos[1]), new int[]{0,1,1,0})) {
-			// 上と左に行けない
-			int[] movableDirections = {1,2};
-			return movableDirections[(int)(rnd.NextUnif() * 2)];
-		} else if (Arrays.equals(field.getPosStatus(pos[0], pos[1]), new int[]{0,0,1,1})) {
-			// 上と右に行けない
-			int[] movableDirections = {2,3};
-			return movableDirections[(int)(rnd.NextUnif() * 2)];
-		} else if (Arrays.equals(field.getPosStatus(pos[0], pos[1]), new int[]{1,0,0,1})) {
-			// 右と下に行けない
-			int[] movableDirections = {0,3};
-			return movableDirections[(int)(rnd.NextUnif() * 2)];
-		} else if (Arrays.equals(field.getPosStatus(pos[0], pos[1]), new int[]{1,1,0,0})) {
-			// 下と左に行けない
-			int[] movableDirections = {0,1};
-			return movableDirections[(int)(rnd.NextUnif() * 2)];
-		} else if (Arrays.equals(field.getPosStatus(pos[0], pos[1]), new int[]{1,1,1,0})) {
-			int[] movableDirections = {0,1,2};
-			return movableDirections[(int)(rnd.NextUnif() * 3)];
-		} else if (Arrays.equals(field.getPosStatus(pos[0], pos[1]), new int[]{1,1,0,1})) {
-			int[] movableDirections = {0,1,3};
-			return movableDirections[(int)(rnd.NextUnif() * 3)];
-		} else if (Arrays.equals(field.getPosStatus(pos[0], pos[1]), new int[]{1,0,1,1})) {
-			int[] movableDirections = {0,2,3};
-			return movableDirections[(int)(rnd.NextUnif() * 3)];
-		} else if (Arrays.equals(field.getPosStatus(pos[0], pos[1]), new int[]{0,1,1,1})) {
-			int[] movableDirections = {1,2,3};
-			return movableDirections[(int)(rnd.NextUnif() * 3)];
-		} else {
-			return (int)(rnd.NextUnif() * 4);
-		}
+		int[] directions = getMovableDirectionsFromPosStatus(field.getPosStatus(pos[0], pos[1]));
+		if (!Arrays.equals(directions, new int[]{})) return directions[(int)(rnd.NextUnif() * directions.length)];
+		return (int)(rnd.NextUnif() * 4);
 	}
 
 	private int determineAttackDirection(int pos[], int e_pos[]) {
@@ -160,5 +134,17 @@ public class ActionA2 {
 			return 4 + (int)(rnd.NextUnif()*4);
 		}
 		return 6;
+	}
+
+	private int[] getMovableDirectionsFromPosStatus(int[] posStatus) {
+		List<Integer> directions = new ArrayList<>();
+		for (int i = 0; i < posStatus.length; i++) {
+			if (posStatus[i] == 1) directions.add(i);
+		}
+		int[] directionsArray = new int[directions.size()];
+		for (int i = 0; i < directions.size(); i++) {
+			directionsArray[i] = directions.get(i);
+		}
+		return directionsArray;
 	}
 }
