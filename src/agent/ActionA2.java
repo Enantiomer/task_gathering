@@ -47,7 +47,7 @@ public class ActionA2 {
 		}
 		if (field.getRewardCount() > REWARD_THRESHOLD) { // •๑Vฬ”ช่’lๆ่‘ฝฉมฝ็
 			// ฺ“ฎ๐—Dๆ
-			if (rnd.NextUnif() < 0.6) return determineMoveDirection(pos);
+			if (rnd.NextUnif() < 0.8) return determineMoveDirection(pos);
 			if (isAttackable(pos, e_pos)) return determineAttackDirection(pos, e_pos);
 			return (int)(rnd.NextUnif()*4);
 		} else {
